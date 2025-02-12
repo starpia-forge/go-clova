@@ -1,5 +1,7 @@
 package clova
 
+import "context"
+
 const (
 	ModelHCX003     = "HCX-003"
 	ModelHCXDASH001 = "HCX-DASH-001"
@@ -15,11 +17,6 @@ type CompletionRequest struct {
 	MaxTokens        int       `json:"maxTokens"`
 	IncludeAIFilters bool      `json:"includeAiFilters"`
 	Seed             int       `json:"seed"`
-}
-
-type Message struct {
-	Role    string `json:"role"`
-	Content string `json:"content"`
 }
 
 type CompletionResponse struct {
@@ -41,4 +38,11 @@ type AIFilter struct {
 	Name      string `json:"name"`
 	Score     string `json:"score"`
 	Result    string `json:"result"`
+}
+
+func (c *Client) CreateCompletion(
+	ctx context.Context,
+	request CompletionRequest,
+) (CompletionResponse, error) {
+	return CompletionResponse{}, nil
 }
