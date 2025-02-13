@@ -38,7 +38,7 @@ type CompletionRequest struct {
 }
 
 type CompletionResponse struct {
-	Status       string     `json:"status"`
+	Status       Status     `json:"status"`
 	Result       Result     `json:"result"`
 	StopReason   string     `json:"stopReason"`
 	InputLength  int        `json:"inputLength"`
