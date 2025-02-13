@@ -2,6 +2,49 @@
 
 An unofficial Go library for the [Naver Clova Studio API](https://api.ncloud-docs.com/docs/en/ai-naver-clovastudio-summary).
 
+This package has support for:
+- Chat Completions
+
+## Installation
+```
+go get https://github.com/StarpiaForge/go-clova
+```
+
+## Usage
+
+### Chat Completion:
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"github.com/StarpiaForge/go-clova"
+	"os"
+)
+
+func main() {
+	config := clova.DefaultConfig("Your Naver Clova Studio API Key")
+	config.BaseURL = clova.NaverClovaAPIURLTestApp // for Test APP URL
+	client := clova.NewClientWithConfig(config)
+
+	response, err := client.CreateChatCompletion(context.Background(), clova.ModelHCXDASH001, clova.CompletionRequest{
+		Messages: []clova.CompletionMessage{
+			{
+				Role:    clova.CompletionMessageRoleUser,
+				Content: "hello, world!",
+			},
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println("Result Message Role :", response.Result.Message.Role)
+	fmt.Println("Result Message Content :", response.Result.Message.Content)
+}
+```
+
 ## Acknowledgment
 
 This project was inspired by [go-openai](https://github.com/sashabaranov/go-openai).
