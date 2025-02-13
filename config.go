@@ -3,7 +3,8 @@ package clova
 import "net/http"
 
 const (
-	clovaAPIURL                    = "https://clovastudio.stream.ntruss.com"
+	NaverClovaAPIURLBase           = "https://clovastudio.stream.ntruss.com"
+	NaverClovaAPIURLTestApp        = "https://clovastudio.stream.ntruss.com/testapp"
 	defaultEmptyMessagesLimit uint = 300
 )
 
@@ -23,7 +24,7 @@ type ClientConfig struct {
 func DefaultConfig(apiKey string) ClientConfig {
 	return ClientConfig{
 		apiKey:  apiKey,
-		BaseURL: clovaAPIURL,
+		BaseURL: NaverClovaAPIURLBase,
 
 		HTTPClient: &http.Client{},
 
