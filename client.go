@@ -3,6 +3,7 @@ package clova
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -114,7 +115,63 @@ func (c *Client) newRequest(
 	return req, nil
 }
 
-func (c *Client) sendRequest(req *http.Request, v Response) error {
+func (c *Client) sendRequest(request *http.Request, v Response) error {
+
+	response, err := c.config.HTTPClient.Do(request)
+	if err != nil {
+		return err
+	}
+	defer response.Body.Close()
+
+	if v != nil {
+		v.SetHeader(response.Header)
+	}
+
+	if isFailureStatusCode(response) {
+		return c.handleErrorResp(response)
+	}
+
+	return decodeResponse(response.Body, v)
+}
+
+func (c *Client) handleErrorResp(response *http.Response) error {
+	body, err := io.ReadAll(response.Body)
+	if err != nil {
+		return fmt.Errorf("error, reading response body: %w", err)
+	}
+	var errRes ErrorResponse
+	if err = json.Unmarshal(body, &errRes); err != nil {
+		return err
+	}
+
+	errRes.ErrStatus.HTTPStatus = response.Status
+	errRes.ErrStatus.HTTPStatusCode = response.StatusCode
+	return errRes.ErrStatus
+}
+
+func isFailureStatusCode(response *http.Response) bool {
+	return response.StatusCode < http.StatusOK || response.StatusCode >= http.StatusBadRequest
+}
+
+func decodeResponse(body io.Reader, v any) error {
+	if v == nil {
+		return nil
+	}
+
+	switch o := v.(type) {
+	case *string:
+		return decodeString(body, o)
+	default:
+		return json.NewDecoder(body).Decode(v)
+	}
+}
+
+func decodeString(body io.Reader, output *string) error {
+	b, err := io.ReadAll(body)
+	if err != nil {
+		return err
+	}
+	*output = string(b)
 	return nil
 }
 
