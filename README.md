@@ -12,6 +12,8 @@ go get https://github.com/StarpiaForge/go-clova
 
 ## Usage
 
+You can find the examples in the `examples` directory.
+
 ### Chat Completion:
 ```go
 package main
@@ -42,6 +44,50 @@ func main() {
 
 	fmt.Println("Result Message Role :", response.Result.Message.Role)
 	fmt.Println("Result Message Content :", response.Result.Message.Content)
+}
+```
+
+### Chat Completion Streaming:
+```go
+package main
+
+import (
+	"context"
+	"fmt"
+	"github.com/StarpiaForge/go-clova"
+	"io"
+	"os"
+)
+
+func main() {
+	config := clova.DefaultConfig("Your Naver Clova Studio API Key")
+	config.BaseURL = clova.NaverClovaAPIURLTestApp
+	client := clova.NewClientWithConfig(config)
+
+	stream, err := client.CreateChatCompletionStream(context.Background(), clova.ModelHCXDASH001, clova.CompletionRequest{
+		Messages: []clova.CompletionMessage{
+			{
+				Role:    clova.CompletionMessageRoleUser,
+				Content: "hello, world!",
+			},
+		},
+	})
+	if err != nil {
+		panic(err)
+	}
+	defer stream.Close()
+
+	for {
+		response, err := stream.Recv()
+		if err == io.EOF {
+			// Complete
+			break
+		}
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(response.Message.Content)
+	}
 }
 ```
 
