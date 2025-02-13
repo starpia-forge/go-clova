@@ -12,7 +12,7 @@ func main() {
 	config.BaseURL = clova.NaverClovaAPIURLTestApp
 	client := clova.NewClientWithConfig(config)
 
-	response, err := client.CreateCompletion(context.Background(), clova.ModelHCXDASH001, clova.CompletionRequest{
+	response, err := client.CreateChatCompletion(context.Background(), clova.ModelHCXDASH001, clova.CompletionRequest{
 		Messages: []clova.CompletionMessage{
 			{
 				Role:    clova.CompletionMessageRoleUser,

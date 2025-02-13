@@ -60,7 +60,7 @@ type AIFilter struct {
 	Result    string `json:"result"`
 }
 
-func (c *Client) CreateCompletion(
+func (c *Client) CreateChatCompletion(
 	ctx context.Context,
 	model string,
 	request CompletionRequest,
