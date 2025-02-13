@@ -1,6 +1,11 @@
 package clova
 
-import "context"
+import (
+	"context"
+	"errors"
+	"fmt"
+	"net/http"
+)
 
 const (
 	ModelHCX003     = "HCX-003"
@@ -40,6 +45,8 @@ type CompletionResponse struct {
 	OutputLength int        `json:"outputLength"`
 	Seed         int        `json:"seed"`
 	AIFilter     []AIFilter `json:"aiFilter"`
+
+	httpHeader
 }
 
 type Result struct {
@@ -55,7 +62,30 @@ type AIFilter struct {
 
 func (c *Client) CreateCompletion(
 	ctx context.Context,
+	model string,
 	request CompletionRequest,
 ) (CompletionResponse, error) {
-	return CompletionResponse{}, nil
+	if model == "" {
+		return CompletionResponse{}, errors.New("model cannot be empty")
+	}
+
+	suffix := fmt.Sprintf("/chat-completions/%s", model)
+
+	req, err := c.newRequest(
+		ctx,
+		http.MethodPost,
+		c.fullURL(suffix, withFullURLAPIVersion("v1")),
+		withBody(request),
+	)
+	if err != nil {
+		return CompletionResponse{}, err
+	}
+
+	// Send Request
+	res := CompletionResponse{}
+	if err := c.sendRequest(req, &res); err != nil {
+		return CompletionResponse{}, err
+	}
+
+	return res, nil
 }
