@@ -106,7 +106,7 @@ type fullURLOptions struct {
 
 type fullURLOption func(*fullURLOptions)
 
-func withAPIVersion(apiVersion string) fullURLOption {
+func withFullURLAPIVersion(apiVersion string) fullURLOption {
 	return func(args *fullURLOptions) {
 		args.apiVersion = apiVersion
 	}
