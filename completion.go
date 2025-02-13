@@ -7,16 +7,29 @@ const (
 	ModelHCXDASH001 = "HCX-DASH-001"
 )
 
+type CompletionMessageRole string
+
+const (
+	CompletionMessageRoleSystem    CompletionMessageRole = "system"
+	CompletionMessageRoleUser      CompletionMessageRole = "user"
+	CompletionMessageRoleAssistant CompletionMessageRole = "assistant"
+)
+
+type CompletionMessage struct {
+	Role    CompletionMessageRole `json:"role"`
+	Content string                `json:"content"`
+}
+
 type CompletionRequest struct {
-	Messages         []Message `json:"messages"`
-	Temperature      float64   `json:"temperature"` // TODO - is it Double?
-	TopK             int       `json:"topK"`
-	TopP             float64   `json:"topP"`
-	RepeatPenalty    float64   `json:"repeatPenalty"`
-	StopBefore       []string  `json:"stopBefore"`
-	MaxTokens        int       `json:"maxTokens"`
-	IncludeAIFilters bool      `json:"includeAiFilters"`
-	Seed             int       `json:"seed"`
+	Messages         []CompletionMessage `json:"messages"`
+	Temperature      float64             `json:"temperature"` // TODO - is it Double?
+	TopK             int                 `json:"topK"`
+	TopP             float64             `json:"topP"`
+	RepeatPenalty    float64             `json:"repeatPenalty"`
+	StopBefore       []string            `json:"stopBefore"`
+	MaxTokens        int                 `json:"maxTokens"`
+	IncludeAIFilters bool                `json:"includeAiFilters"`
+	Seed             int                 `json:"seed"`
 }
 
 type CompletionResponse struct {
@@ -30,7 +43,7 @@ type CompletionResponse struct {
 }
 
 type Result struct {
-	Message Message `json:"message"`
+	Message CompletionMessage `json:"message"`
 }
 
 type AIFilter struct {
