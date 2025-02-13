@@ -1,6 +1,6 @@
 # Go Clova
 
-Unofficial [Naver Clova Studio API](https://clova.ai/) wrapper for Go.
+An unofficial Go library for the [Naver Clova Studio API](https://api.ncloud-docs.com/docs/en/ai-naver-clovastudio-summary).
 
 ## Acknowledgment
 
