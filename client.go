@@ -53,15 +53,9 @@ func withBody(body any) requestOption {
 	}
 }
 
-func withContentType(contentType string) requestOption {
+func withSetHeader(key string, value string) requestOption {
 	return func(args *requestOptions) {
-		args.header.Set("Content-Type", contentType)
-	}
-}
-
-func withAccept(accept string) requestOption {
-	return func(args *requestOptions) {
-		args.header.Set("Accept", accept)
+		args.header.Set(key, value)
 	}
 }
 
