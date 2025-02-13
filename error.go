@@ -7,8 +7,7 @@ type ErrorResponse struct {
 }
 
 type ErrorResponseStatus struct {
-	Code    string `json:"code"`
-	Message string `json:"message"`
+	Status
 
 	HTTPStatus     string `json:"-"`
 	HTTPStatusCode int    `json:"-"`
