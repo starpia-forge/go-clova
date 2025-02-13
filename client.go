@@ -102,8 +102,6 @@ func (c *Client) newRequest(
 
 type fullURLOptions struct {
 	apiVersion string
-	model      string
-	taskID     string
 }
 
 type fullURLOption func(*fullURLOptions)
@@ -111,18 +109,6 @@ type fullURLOption func(*fullURLOptions)
 func withAPIVersion(apiVersion string) fullURLOption {
 	return func(args *fullURLOptions) {
 		args.apiVersion = apiVersion
-	}
-}
-
-func withModel(model string) fullURLOption {
-	return func(args *fullURLOptions) {
-		args.model = model
-	}
-}
-
-func withTaskID(taskID string) fullURLOption {
-	return func(args *fullURLOptions) {
-		args.taskID = taskID
 	}
 }
 
@@ -134,18 +120,6 @@ func (c *Client) fullURL(suffix string, opts ...fullURLOption) string {
 
 	for _, opt := range opts {
 		opt(&args)
-	}
-
-	if len(args.apiVersion) > 0 {
-		baseURL = fmt.Sprintf("%s/%s", baseURL, args.apiVersion)
-	}
-
-	if len(args.taskID) > 0 {
-		baseURL = fmt.Sprintf("%s/tasks/%s", baseURL, args.taskID)
-	}
-
-	if len(args.model) > 0 {
-		suffix = fmt.Sprintf("%s/%s", suffix, args.model)
 	}
 
 	return fmt.Sprintf("%s%s", baseURL, suffix)
