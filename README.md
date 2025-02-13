@@ -61,7 +61,7 @@ import (
 
 func main() {
 	config := clova.DefaultConfig("Your Naver Clova Studio API Key")
-	config.BaseURL = clova.NaverClovaAPIURLTestApp
+	config.BaseURL = clova.NaverClovaAPIURLTestApp // for Test APP URL
 	client := clova.NewClientWithConfig(config)
 
 	stream, err := client.CreateChatCompletionStream(context.Background(), clova.ModelHCXDASH001, clova.CompletionRequest{
