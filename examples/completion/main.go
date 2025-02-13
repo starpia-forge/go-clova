@@ -18,6 +18,14 @@ func main() {
 				Role:    clova.CompletionMessageRoleUser,
 				Content: "hello, world!",
 			},
+			{
+				Role:    clova.CompletionMessageRoleAssistant,
+				Content: "Hello there! Nice to see you. How can I assist you today?",
+			},
+			{
+				Role:    clova.CompletionMessageRoleUser,
+				Content: "What was the first sentence I said?",
+			},
 		},
 	})
 	if err != nil {
