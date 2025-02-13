@@ -12,7 +12,7 @@ type HTTPDoer interface {
 }
 
 type ClientConfig struct {
-	authToken string
+	apiKey string
 
 	BaseURL    string
 	HTTPClient HTTPDoer
@@ -20,10 +20,10 @@ type ClientConfig struct {
 	EmptyMessagesLimit uint
 }
 
-func DefaultConfig(authToken string) ClientConfig {
+func DefaultConfig(apiKey string) ClientConfig {
 	return ClientConfig{
-		authToken: authToken,
-		BaseURL:   clovaAPIURL,
+		apiKey:  apiKey,
+		BaseURL: clovaAPIURL,
 
 		HTTPClient: &http.Client{},
 
