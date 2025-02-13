@@ -205,5 +205,9 @@ func (c *Client) fullURL(suffix string, opts ...fullURLOption) string {
 		opt(&args)
 	}
 
+	if args.apiVersion != "" {
+		baseURL = fmt.Sprintf("%s/%s", baseURL, args.apiVersion)
+	}
+
 	return fmt.Sprintf("%s%s", baseURL, suffix)
 }
