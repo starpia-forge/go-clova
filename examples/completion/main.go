@@ -37,5 +37,4 @@ func main() {
 	fmt.Println("Status Message :", response.Status.Message)
 	fmt.Println("Result Message Role :", response.Result.Message.Role)
 	fmt.Println("Result Message Content :", response.Result.Message.Content)
-
 }
