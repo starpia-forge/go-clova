@@ -13,6 +13,10 @@ type Client struct {
 	config ClientConfig
 }
 
+type Response interface {
+	SetHeader(http.Header)
+}
+
 func NewClient(apiKey string) *Client {
 	config := DefaultConfig(apiKey)
 	return NewClientWithConfig(config)
@@ -98,6 +102,10 @@ func (c *Client) newRequest(
 	}
 
 	return req, nil
+}
+
+func (c *Client) sendRequest(req *http.Request, v Response) error {
+	return nil
 }
 
 type fullURLOptions struct {
