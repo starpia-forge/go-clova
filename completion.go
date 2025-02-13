@@ -76,8 +76,8 @@ func (c *Client) CreateChatCompletion(
 		http.MethodPost,
 		c.fullURL(suffix, withFullURLAPIVersion("v1")),
 		withBody(request),
-		withContentType("application/json"),
-		withAccept("application/json"),
+		withSetHeader("Content-Type", "application/json"),
+		withSetHeader("Accept", "application/json"),
 	)
 	if err != nil {
 		return CompletionResponse{}, err
