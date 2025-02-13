@@ -1,6 +1,7 @@
 package clova
 
 import (
+	"bytes"
 	"context"
 	"io"
 	"net/http"
@@ -22,8 +23,9 @@ func NewClientWithConfig(config ClientConfig) *Client {
 }
 
 type requestOptions struct {
-	body   any
-	header http.Header
+	body       any
+	header     http.Header
+	marshaller Marshaller
 }
 
 type requestOption func(*requestOptions)
@@ -53,17 +55,28 @@ func (c *Client) newRequest(
 ) (*http.Request, error) {
 	// Default Options
 	args := &requestOptions{
-		body:   nil,
-		header: make(http.Header),
+		body:       nil,
+		header:     make(http.Header),
+		marshaller: &JSONMarshaller{},
 	}
 
 	for _, opt := range opts {
 		opt(args)
 	}
 
+	// Create Body Reader
 	var bodyReader io.Reader
 	if args.body != nil {
-		bodyReader = args.body.(io.Reader)
+		b, ok := args.body.(io.Reader)
+		if ok {
+			bodyReader = b
+		} else {
+			bodyBytes, err := args.marshaller.Marshal(args.body)
+			if err != nil {
+				return nil, err
+			}
+			bodyReader = bytes.NewBuffer(bodyBytes)
+		}
 	}
 
 	req, err := http.NewRequestWithContext(ctx, method, url, bodyReader)
@@ -71,6 +84,7 @@ func (c *Client) newRequest(
 		return nil, err
 	}
 
+	// Replace request headers with provided headers (if any)
 	if args.header != nil {
 		req.Header = args.header
 	}
