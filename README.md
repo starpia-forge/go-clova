@@ -93,9 +93,11 @@ func main() {
 
 ## Acknowledgment
 
-This project was inspired by [go-openai](https://github.com/sashabaranov/go-openai).
+This project was strongly inspired by [go-openai](https://github.com/sashabaranov/go-openai).
 
-While this project is developed independently, it shares similar design principles and goals with the original project.
+Therefore, while this project has different goals, it shares similar design principles with the original project.
+
+Thank you to all the contributors who created the amazing `go-openai` library.
 
 ## License
 [Apache License Version 2.0](https://github.com/StarpiaForge/go-clova/blob/master/LICENSE)
