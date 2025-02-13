@@ -76,6 +76,8 @@ func (c *Client) CreateCompletion(
 		http.MethodPost,
 		c.fullURL(suffix, withFullURLAPIVersion("v1")),
 		withBody(request),
+		withContentType("application/json"),
+		withAccept("application/json"),
 	)
 	if err != nil {
 		return CompletionResponse{}, err
