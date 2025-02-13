@@ -48,6 +48,12 @@ func withAccept(accept string) requestOption {
 	}
 }
 
+func withMarshaller(marshaller Marshaller) requestOption {
+	return func(args *requestOptions) {
+		args.marshaller = marshaller
+	}
+}
+
 func (c *Client) newRequest(
 	ctx context.Context,
 	method, url string,
