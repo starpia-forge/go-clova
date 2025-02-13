@@ -1,6 +1,7 @@
 package clova
 
 import (
+	"bufio"
 	"bytes"
 	"context"
 	"encoding/json"
@@ -112,7 +113,6 @@ func (c *Client) newRequest(
 }
 
 func (c *Client) sendRequest(request *http.Request, v Response) error {
-
 	response, err := c.config.HTTPClient.Do(request)
 	if err != nil {
 		return err
@@ -128,6 +128,25 @@ func (c *Client) sendRequest(request *http.Request, v Response) error {
 	}
 
 	return decodeResponse(response.Body, v)
+}
+
+func sendRequestStream[T streamable](client *Client, request *http.Request) (*streamReader[T], error) {
+	response, err := client.config.HTTPClient.Do(request)
+	if err != nil {
+		return nil, err
+	}
+
+	if isFailureStatusCode(response) {
+		return nil, client.handleErrorResp(response)
+	}
+
+	return &streamReader[T]{
+		isFinished:  false,
+		reader:      bufio.NewReader(response.Body),
+		response:    response,
+		unmarshaler: &JSONUnmarshaler{},
+		httpHeader:  httpHeader(response.Header),
+	}, nil
 }
 
 func (c *Client) setCommonHeaders(req *http.Request) {
