@@ -102,17 +102,19 @@ func (c *Client) newRequest(
 		}
 	}
 
-	req, err := http.NewRequestWithContext(ctx, method, url, bodyReader)
+	request, err := http.NewRequestWithContext(ctx, method, url, bodyReader)
 	if err != nil {
 		return nil, err
 	}
 
 	// Replace request headers with provided headers (if any)
 	if args.header != nil {
-		req.Header = args.header
+		request.Header = args.header
 	}
 
-	return req, nil
+	c.setCommonHeaders(request)
+
+	return request, nil
 }
 
 func (c *Client) sendRequest(request *http.Request, v Response) error {
@@ -132,6 +134,12 @@ func (c *Client) sendRequest(request *http.Request, v Response) error {
 	}
 
 	return decodeResponse(response.Body, v)
+}
+
+func (c *Client) setCommonHeaders(req *http.Request) {
+	if c.config.apiKey != "" {
+		req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", c.config.apiKey))
+	}
 }
 
 func (c *Client) handleErrorResp(response *http.Response) error {
