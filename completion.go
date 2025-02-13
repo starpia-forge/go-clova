@@ -27,14 +27,14 @@ type CompletionMessage struct {
 
 type CompletionRequest struct {
 	Messages         []CompletionMessage `json:"messages"`
-	Temperature      float64             `json:"temperature"` // TODO - is it Double?
-	TopK             int                 `json:"topK"`
-	TopP             float64             `json:"topP"`
-	RepeatPenalty    float64             `json:"repeatPenalty"`
-	StopBefore       []string            `json:"stopBefore"`
-	MaxTokens        int                 `json:"maxTokens"`
-	IncludeAIFilters bool                `json:"includeAiFilters"`
-	Seed             int                 `json:"seed"`
+	Temperature      float64             `json:"temperature,omitempty"` // TODO - is it Double?
+	TopK             int                 `json:"topK,omitempty"`
+	TopP             float64             `json:"topP,omitempty"`
+	RepeatPenalty    float64             `json:"repeatPenalty,omitempty"`
+	StopBefore       []string            `json:"stopBefore,omitempty"`
+	MaxTokens        int                 `json:"maxTokens,omitempty"`
+	IncludeAIFilters bool                `json:"includeAiFilters,omitempty"`
+	Seed             int                 `json:"seed,omitempty"`
 }
 
 type CompletionResponse struct {
