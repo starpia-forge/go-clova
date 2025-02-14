@@ -7,7 +7,7 @@ This package has support for:
 
 ## Installation
 ```
-go get https://github.com/StarpiaForge/go-clova
+go get github.com/StarpiaForge/go-clova
 ```
 
 ## Usage
