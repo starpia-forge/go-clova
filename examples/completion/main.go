@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/StarpiaForge/go-clova"
+	"github.com/starpia-forge/go-clova"
 	"os"
 )
 
