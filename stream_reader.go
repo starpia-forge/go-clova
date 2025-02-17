@@ -3,8 +3,13 @@ package clova
 import (
 	"bufio"
 	"bytes"
+	"errors"
 	"io"
 	"net/http"
+)
+
+var (
+	ErrTooManyEmptyStreamMessages = errors.New("stream has sent too many empty messages")
 )
 
 var (
@@ -25,7 +30,8 @@ type streamable interface {
 }
 
 type streamReader[T streamable] struct {
-	isFinished bool
+	emptyMessagesLimit uint
+	isFinished         bool
 
 	reader      *bufio.Reader
 	response    *http.Response
@@ -59,6 +65,8 @@ func (stream *streamReader[T]) Recv() (response StreamResponse[T], err error) {
 }
 
 func (stream *streamReader[T]) processLines() ([]byte, error) {
+	emptyMessageCount := uint(0)
+
 	for {
 		rawLine, readErr := stream.reader.ReadBytes('\n')
 		if readErr != nil {
@@ -82,6 +90,10 @@ func (stream *streamReader[T]) processLines() ([]byte, error) {
 			return noSpaceLine, nil
 		}
 		if bytes.HasPrefix(noSpaceLine, headerData) == false {
+			emptyMessageCount++
+			if emptyMessageCount > stream.emptyMessagesLimit {
+				return nil, ErrTooManyEmptyStreamMessages
+			}
 			continue
 		}
 
