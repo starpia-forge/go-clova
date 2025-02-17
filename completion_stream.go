@@ -8,9 +8,9 @@ import (
 )
 
 const (
-	ChatCompletionStreamEventToken  = "token"
-	ChatCompletionStreamEventResult = "result"
-	ChatCompletionStreamEventSignal = "signal"
+	CompletionMessageStreamEventToken  = "token"
+	CompletionMessageStreamEventResult = "result"
+	CompletionMessageStreamEventSignal = "signal"
 )
 
 type ChatCompletionStreamResponse struct {
