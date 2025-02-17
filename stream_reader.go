@@ -8,10 +8,17 @@ import (
 )
 
 var (
-	headerData  = []byte("data:")
+	idPrefix    = []byte(`id:`)
+	eventPrefix = []byte(`event:`)
+	headerData  = []byte(`data:`)
 	errorPrefix = []byte(`data:{"status":`)
-	idPrefix    = []byte(`id: `)
 )
+
+type StreamResponse[T streamable] struct {
+	ID    string
+	Event string
+	Data  T
+}
 
 type streamable interface {
 	ChatCompletionStreamResponse
@@ -27,25 +34,28 @@ type streamReader[T streamable] struct {
 	httpHeader
 }
 
-func (stream *streamReader[T]) Recv() (response T, err error) {
-	rawLine, err := stream.RecvRaw()
-	if err != nil {
-		return
+func (stream *streamReader[T]) Recv() (response StreamResponse[T], err error) {
+	for {
+		var lineBytes []byte
+		lineBytes, err = stream.processLines()
+		if err != nil {
+			return
+		}
+		if bytes.HasPrefix(lineBytes, idPrefix) {
+			response.ID = string(bytes.TrimPrefix(lineBytes, idPrefix))
+			continue
+		}
+		if bytes.HasPrefix(lineBytes, eventPrefix) {
+			response.Event = string(bytes.TrimPrefix(lineBytes, eventPrefix))
+			continue
+		}
+		err = stream.unmarshaler.Unmarshal(lineBytes, &response.Data)
+		if err != nil {
+			return
+		}
+		break
 	}
-
-	err = stream.unmarshaler.Unmarshal(rawLine, &response)
-	if err != nil {
-		return
-	}
-	return response, nil
-}
-
-func (stream *streamReader[T]) RecvRaw() ([]byte, error) {
-	if stream.isFinished {
-		return nil, io.EOF
-	}
-
-	return stream.processLines()
+	return
 }
 
 func (stream *streamReader[T]) processLines() ([]byte, error) {
@@ -62,6 +72,14 @@ func (stream *streamReader[T]) processLines() ([]byte, error) {
 				return nil, err
 			}
 			return nil, errResponse.ErrStatus
+		}
+		if bytes.HasPrefix(noSpaceLine, idPrefix) {
+			// Return ID
+			return noSpaceLine, nil
+		}
+		if bytes.HasPrefix(noSpaceLine, eventPrefix) {
+			// Return Event
+			return noSpaceLine, nil
 		}
 		if bytes.HasPrefix(noSpaceLine, headerData) == false {
 			continue
