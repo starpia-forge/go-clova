@@ -43,6 +43,9 @@ func main() {
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println(response.Message.Content)
+		fmt.Println("ID :", response.ID)
+		fmt.Println("Event :", response.Event)
+		fmt.Println("Data :", response.Data)
+		fmt.Println()
 	}
 }
