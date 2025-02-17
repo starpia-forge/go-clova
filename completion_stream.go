@@ -7,6 +7,12 @@ import (
 	"net/http"
 )
 
+const (
+	ChatCompletionStreamEventToken  = "token"
+	ChatCompletionStreamEventResult = "result"
+	ChatCompletionStreamEventSignal = "signal"
+)
+
 type ChatCompletionStreamResponse struct {
 	Message      CompletionMessage `json:"message"`
 	Index        int               `json:"index"`
