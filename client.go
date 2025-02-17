@@ -141,11 +141,12 @@ func sendRequestStream[T streamable](client *Client, request *http.Request) (*st
 	}
 
 	return &streamReader[T]{
-		isFinished:  false,
-		reader:      bufio.NewReader(response.Body),
-		response:    response,
-		unmarshaler: &JSONUnmarshaler{},
-		httpHeader:  httpHeader(response.Header),
+		isFinished:         false,
+		emptyMessagesLimit: client.config.EmptyMessagesLimit,
+		reader:             bufio.NewReader(response.Body),
+		response:           response,
+		unmarshaler:        &JSONUnmarshaler{},
+		httpHeader:         httpHeader(response.Header),
 	}, nil
 }
 
