@@ -38,19 +38,19 @@ type CompletionRequest struct {
 }
 
 type CompletionResponse struct {
-	Status       Status     `json:"status"`
-	Result       Result     `json:"result"`
-	StopReason   string     `json:"stopReason"`
-	InputLength  int        `json:"inputLength"`
-	OutputLength int        `json:"outputLength"`
-	Seed         int        `json:"seed"`
-	AIFilter     []AIFilter `json:"aiFilter"`
+	Status Status `json:"status"`
+	Result Result `json:"result"`
 
 	httpHeader
 }
 
 type Result struct {
-	Message CompletionMessage `json:"message"`
+	Message      CompletionMessage `json:"message"`
+	StopReason   string            `json:"stopReason"`
+	InputLength  int               `json:"inputLength"`
+	OutputLength int               `json:"outputLength"`
+	Seed         int               `json:"seed"`
+	AIFilter     []AIFilter        `json:"aiFilter"`
 }
 
 type AIFilter struct {
